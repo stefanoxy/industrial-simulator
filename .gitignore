@@ -28,3 +28,4 @@ replay_pid*
 /.classpath
 /.settings/
 !/compose/.env
+/.project
