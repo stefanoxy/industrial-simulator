@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.gradleup.shadow' version '8.3.6'
+}
+
+group = 'it.stefano'
+version = '1.0'
+sourceCompatibility = '21'
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+application {
+    mainClass = 'it.stefano.machinesimulator.Main'
+}
+
+dependencies {
+    // MQTT Client
+	implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+	// JSON Helper
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.3'
+	// slf4j
+	implementation 'org.slf4j:slf4j-api:2.0.17'
+	// logback	
+    implementation 'ch.qos.logback:logback-classic:1.5.18'
+
+	// lombok
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
+
+//jar {
+//    manifest {
+//        attributes(
+//            'Main-Class': 'it.stefano.middleware.ot.Main'
+//        )
+//    }
+//}

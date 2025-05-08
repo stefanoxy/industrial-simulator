@@ -1,0 +1,49 @@
+@startuml
+
+left to right direction
+
+package machinesimulator {
+  class Main
+
+	package controlroom {
+	  class ControlRoom
+	}
+	package helper {
+	  class CryptoHelper
+	  class JsonHelper
+	}
+
+	package machine {
+	  package boiler {
+	  	class Boiler
+	  	class BoilerCommandMessage
+	  	class BoilerTelemetryMessage
+	  }
+	  package refrigerator {
+	  	class Refrigerator
+	  	class RefrigeratorCommandMessage
+	  	class RefrigeratorTelemetryMessage
+	  }
+	  package tank {
+	  	class Refrigerator
+	  	class RefrigeratorCommandMessage
+	  	class RefrigeratorTelemetryMessage
+	  }
+	  
+	  class AbstractMachine
+	  class MachineSimulator
+	}
+	
+	package mqtt {
+		class AbstractCommandMessage
+		class AbstractMiddlewareMessage
+		class AbstractTelemetryMessage
+		class MqttManager
+		class SecureEnvelope
+	}
+}
+
+Main --> ControlRoom : uses
+Main --> MachineSimulator : uses
+
+@enduml

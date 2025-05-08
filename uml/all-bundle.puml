@@ -1,0 +1,47 @@
+@startuml bundle
+
+interface AbstractMiddlewareMessage
+AbstractCommandMessage ..|> AbstractMiddlewareMessage : implements
+BoilerCommandMessage --|> AbstractCommandMessage
+RefrigeratorCommandMessage --|> AbstractCommandMessage
+TankBoilerCommandMessage --|> AbstractCommandMessage
+AbstractTelemetryMessage ..|> AbstractMiddlewareMessage : implements
+BoilerTelemetryMessage --|> AbstractTelemetryMessage
+RefrigeratorTelemetryMessage --|> AbstractTelemetryMessage
+TankTelemetryMessage --|> AbstractTelemetryMessage
+
+ErrorMessage ..|> AbstractMiddlewareMessage : implements
+
+
+interface IMqttMessageListener
+AbstractMachine ..|> IMqttMessageListener : implements
+ControlRoom ..|> IMqttMessageListener : implements
+
+
+Boiler --|> AbstractMachine
+Refrigerator --|> AbstractMachine
+Tank --|> AbstractMachine
+
+
+ControlRoom --> BoilerCommandMessage : uses
+ControlRoom --> RefrigeratorCommandMessage : uses
+ControlRoom --> TankCommandMessage : uses
+ControlRoom --> BoilerTelemetryMessage : uses
+ControlRoom --> RefrigeratorTelemetryMessage : uses
+ControlRoom --> TankTelemetryMessage : uses
+
+ControlRoom --> MqttManager : uses
+AbstractMachine --> MqttManager : uses
+SecureEnvelope --> AbstractMiddlewareMessage : uses
+MachineSimulator --> AbstractMachine : uses
+
+Main --> ControlRoom : uses
+Main --> MachineSimulator : uses
+Main --> MachineType : uses
+
+package "moduloA" {
+class TankTelemetryMessage
+class RefrigeratorTelemetryMessage
+}
+
+@enduml

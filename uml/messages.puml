@@ -1,0 +1,15 @@
+@startuml messages
+
+interface AbstractMiddlewareMessage
+AbstractCommandMessage ..|> AbstractMiddlewareMessage : implements
+BoilerCommandMessage --|> AbstractCommandMessage
+RefrigeratorCommandMessage --|> AbstractCommandMessage
+TankBoilerCommandMessage --|> AbstractCommandMessage
+AbstractTelemetryMessage ..|> AbstractMiddlewareMessage : implements
+BoilerTelemetryMessage --|> AbstractTelemetryMessage
+RefrigeratorTelemetryMessage --|> AbstractTelemetryMessage
+TankTelemetryMessage --|> AbstractTelemetryMessage
+
+ErrorMessage ..|> AbstractMiddlewareMessage : implements
+
+@enduml

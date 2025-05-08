@@ -1,0 +1,37 @@
+@startuml
+
+abstract class AbstractMachine
+{
+	-machineId: String
+	-mqttClientId: String
+	-outputTopic: String
+	-subscriptionTopic: String
+	-mqttManager: MqttManager
+	-keyStore: KeyStore
+	-privateKey: PrivateKey
+
+	+{abstract} run(): void
+	+{abstract} handleCommand(topic: String, message: AbstractMiddlewareMessage): void
+	+messageArrived(topic: String, message: MqttMessage): void
+	#sendTelemetry(telemetryMessage: AbstractTelemetryMessage, qos: QOS, retained: boolean, prettyJson: boolean): void
+}
+
+class Boiler
+{
+	+run(): void
+}
+class Refrigerator
+{
+	+run(): void
+}
+class Tank
+{
+	+run(): void
+}
+
+AbstractMachine --|> java.lang.Thread : extends
+Boiler --|> AbstractMachine : extends
+Refrigerator --|> AbstractMachine : extends
+Tank --|> AbstractMachine : extends
+
+@enduml

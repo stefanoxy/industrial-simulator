@@ -1,0 +1,31 @@
+@startuml
+
+class BoilerCommandMessage {
+	-poweredOn: boolean
+	-temperature: double
+	-pressure: double
+}
+
+class RefrigeratorCommandMessage {
+	-poweredOn: boolean
+	-temperature: double
+}
+
+class TankCommandMessage {
+	-level: double
+}
+
+class AbstractCommandMessage {
+	-machineType: MachineType
+	-machineId: String
+}
+
+interface AbstractMiddlewareMessage {
+}
+
+AbstractCommandMessage ..|> AbstractMiddlewareMessage : implements
+BoilerCommandMessage --|> AbstractCommandMessage
+RefrigeratorCommandMessage --|> AbstractCommandMessage
+TankCommandMessage --|> AbstractCommandMessage
+
+@enduml

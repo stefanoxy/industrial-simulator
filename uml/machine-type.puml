@@ -1,0 +1,18 @@
+@startuml
+
+enum MachineType {
+	CONTROL_ROOM = 0
+	BOILER = 1
+	REFRIGERATOR = 2
+	TANK = 3
+}
+
+abstract class AbstractMachine
+
+MachineType --> AbstractMachine : uses
+MachineSimulator --> AbstractMachine : uses
+Boiler --|> AbstractMachine : extends
+Refrigerator --|> AbstractMachine : extends
+Tank --|> AbstractMachine : extends
+
+@enduml

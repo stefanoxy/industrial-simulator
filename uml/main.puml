@@ -1,0 +1,11 @@
+@startuml main
+
+class Main
+class ControlRoom
+class MachineType
+
+Main --> ControlRoom : uses
+Main --> MachineSimulator : uses
+Main --> MachineType : uses
+
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+
+class BoilerTelemetryMessage {
+	-temperature: double
+	-pressure: double
+}
+
+class RefrigeratorTelemetryMessage {
+	-temperature: double
+}
+
+class TankTelemetryMessage {
+	-level: double
+}
+
+class AbstractTelemetryMessage {
+	-machineType: MachineType
+	-machineId: String
+}
+
+interface AbstractMiddlewareMessage {
+}
+
+AbstractTelemetryMessage ..|> AbstractMiddlewareMessage : implements
+BoilerTelemetryMessage --|> AbstractTelemetryMessage
+RefrigeratorTelemetryMessage --|> AbstractTelemetryMessage
+TankTelemetryMessage --|> AbstractTelemetryMessage
+
+@enduml
