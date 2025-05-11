@@ -75,13 +75,14 @@ public abstract class AbstractMachine extends Thread implements IMqttMessageList
 		}
 	}
 
-	protected void sendTelemetry(AbstractTelemetryMessage telemetryMessage, QOS qos, boolean retained, boolean prettyJson) throws MachineException
+	protected void sendTelemetry(AbstractTelemetryMessage telemetryMessage) throws MachineException
 	{
 		try {
 			log.info(mqttClientId + ": sending message " + telemetryMessage + " to topic " + outputTopic);
 
 			SecureEnvelope envelope = new SecureEnvelope(telemetryMessage, privateKey);
-			mqttManager.sendMessage(envelope, outputTopic, qos, retained, prettyJson);
+			// mandiamo dati di telemetria con QoS 1, quindi accettiamo duplicati
+			mqttManager.sendMessage(envelope, outputTopic, QOS.AT_LEAST_ONCE, false, false);
 		}
 		catch (Exception e) {
 			throw new MachineException(mqttClientId + ": exception sending msg " + telemetryMessage + " to MQTT Broker", e);

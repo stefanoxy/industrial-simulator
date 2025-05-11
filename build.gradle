@@ -34,11 +34,3 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
-
-//jar {
-//    manifest {
-//        attributes(
-//            'Main-Class': 'it.stefano.middleware.ot.Main'
-//        )
-//    }
-//}

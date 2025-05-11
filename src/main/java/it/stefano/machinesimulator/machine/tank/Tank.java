@@ -38,10 +38,10 @@ public class Tank extends AbstractMachine
 				double delta = Math.random() * (MAX_LEVEL - MIN_LEVEL);
 				double level = Math.random() < 1.0d - DATAERROR_PERCENTAGE ? MIN_LEVEL + delta : MAX_LEVEL + delta;
 				tt = new TankTelemetryMessage(this, level);
-				sendTelemetry(tt, QOS.AT_LEAST_ONCE, false, false);
+				sendTelemetry(tt);
 			}
 			catch (Exception e) {
-				log.error("exception sending message " + tt + " to Control Room via MQTT", e);
+				log.error("exception sending telemetry message " + tt + " to Control Room via MQTT", e);
 			}
 		}
 	}

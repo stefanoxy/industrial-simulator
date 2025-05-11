@@ -98,7 +98,7 @@ public class ControlRoom implements IMqttMessageListener
 					btemperature = (Boiler.MIN_TEMPERATURE + Boiler.MAX_TEMPERATURE) / 2.0d;
 					log.warn("Boiler temperature out of range. Setting temperature=" + btemperature + " and pressure=" + bpressure + " on " + type + " " + telemetry.getMachineId());
 					BoilerCommandMessage bc = new BoilerCommandMessage(type, bt.getMachineId(), true, btemperature, bpressure);
-					sendCommand(bc, type, telemetry.getMachineId(), QOS.AT_LEAST_ONCE, false, false);
+					sendCommand(bc, type, telemetry.getMachineId());
 				}
 				if (!isValidRange(type, bpressure, "pressure", Boiler.MIN_PRESSURE, Boiler.MAX_PRESSURE)) {
 
@@ -106,7 +106,7 @@ public class ControlRoom implements IMqttMessageListener
 					bpressure = Boiler.MIN_PRESSURE;
 					log.warn("Boiler pressure out of range. Setting temperature=" + btemperature + " and pressure=" + bpressure + " on " + type + " " + telemetry.getMachineId());
 					BoilerCommandMessage bc = new BoilerCommandMessage(type, bt.getMachineId(), true, btemperature, bpressure);
-					sendCommand(bc, type, telemetry.getMachineId(), QOS.AT_LEAST_ONCE, false, false);
+					sendCommand(bc, type, telemetry.getMachineId());
 				}
 				break;
 			case REFRIGERATOR:
@@ -118,7 +118,8 @@ public class ControlRoom implements IMqttMessageListener
 					rtemperature = (Refrigerator.MIN_TEMPERATURE + Refrigerator.MAX_TEMPERATURE) / 2;
 					log.warn("Refrigerator temperature out of range. Setting temperature=" + rtemperature + " on " + type + " " + telemetry.getMachineId());
 					RefrigeratorCommandMessage rc = new RefrigeratorCommandMessage(type, rt.getMachineId(), true, rtemperature);
-					sendCommand(rc, type, telemetry.getMachineId(), QOS.AT_LEAST_ONCE, false, false);
+					// mandiamo comando con QoS 1, quindi accettiamo duplicati
+					sendCommand(rc, type, telemetry.getMachineId());
 				}
 				break;
 			case TANK:
@@ -129,10 +130,12 @@ public class ControlRoom implements IMqttMessageListener
 					tlevel = (Tank.MIN_LEVEL + Tank.MAX_LEVEL) / 2.0d;
 					log.warn("Tank level out of range. Setting level=" + tlevel + " on " + type + " " + telemetry.getMachineId());
 					TankCommandMessage tc = new TankCommandMessage(type, tt.getMachineId(), tlevel);
-					sendCommand(tc, type, telemetry.getMachineId(), QOS.AT_LEAST_ONCE, false, false);
+					// mandiamo comando con QoS 1, quindi accettiamo duplicati
+					sendCommand(tc, type, telemetry.getMachineId());
 				}
 				break;
 			default:
+				// TODO commentare questo default
 				// useful log to discover unmanaged cases of new machine types
 				log.error("Unimplemented telemetry case '" + type + "'. Please check MachineType");
 				break;
@@ -160,14 +163,15 @@ public class ControlRoom implements IMqttMessageListener
 			error = new ErrorMessage(machineId, machineType, machineError, value);
 			log.info("Sending error message " + error + " to topic " + ERROR_TOPIC);
 			SecureEnvelope envelope = new SecureEnvelope(error, privateKey);
-			mqttManager.sendMessage(envelope, ERROR_TOPIC, QOS.AT_LEAST_ONCE, false, false);
+			// mandiamo gli alert con QoS 2, quindi esattamente una volta: vogliamo essere certi di non creare duplicati per non creare falsi allarmi
+			mqttManager.sendMessage(envelope, ERROR_TOPIC, QOS.EXACTLY_ONCE, false, false);
 		}
 		catch (Exception e) {
 			throw new ControlRoomException("Exception sending error " + error + " to topic " + ERROR_TOPIC, e);
 		}
 	}
 
-	private void sendCommand(AbstractCommandMessage message, MachineType machineType, String machineId, QOS qos, boolean retained, boolean prettyJson) throws ControlRoomException
+	private void sendCommand(AbstractCommandMessage message, MachineType machineType, String machineId) throws ControlRoomException
 	{
 		// il topic su cui scrive la ControlRoom è, dal punto di vista dei macchinari, il loro input topic
 		String outputTopic = MachineType.getInputTopicByMachine(machineType.getMachineClass(), machineId);
@@ -175,7 +179,8 @@ public class ControlRoom implements IMqttMessageListener
 		try {
 			log.info("Sending message " + message + " to topic " + outputTopic);
 			SecureEnvelope envelope = new SecureEnvelope(message, privateKey);
-			mqttManager.sendMessage(envelope, outputTopic, qos, retained, prettyJson);
+			// mandiamo comandi con QoS 1, quindi accettiamo duplicati: consideriamo accettabile mandare eventualmente più di una volta lo stesso comando
+			mqttManager.sendMessage(envelope, outputTopic, QOS.AT_LEAST_ONCE, false, false);
 		}
 		catch (Exception e) {
 			throw new ControlRoomException("Exception sending msg " + message + " to MQTT topic " + outputTopic, e);

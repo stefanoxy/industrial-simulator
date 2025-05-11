@@ -47,10 +47,10 @@ public class Boiler extends AbstractMachine
 				double pressure = Math.random() < 1.0d - DATAERROR_PERCENTAGE ? MIN_PRESSURE + delta : MIN_PRESSURE - delta;
 
 				bt = new BoilerTelemetryMessage(this, temperature, pressure);
-				sendTelemetry(bt, QOS.AT_LEAST_ONCE, false, false);
+				sendTelemetry(bt);
 			}
 			catch (Exception e) {
-				log.error("Exception sending message " + bt + " to Control Room via MQTT", e);
+				log.error("Exception sending telemetry message " + bt + " to Control Room via MQTT", e);
 			}
 		}
 	}

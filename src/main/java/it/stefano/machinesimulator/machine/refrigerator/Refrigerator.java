@@ -39,10 +39,10 @@ public class Refrigerator extends AbstractMachine
 				double delta = Math.random() * (MAX_TEMPERATURE - MIN_TEMPERATURE);
 				double temperature = Math.random() < 1.0d - DATAERROR_PERCENTAGE ? MIN_TEMPERATURE + delta : MAX_TEMPERATURE + delta;
 				rt = new RefrigeratorTelemetryMessage(this, temperature);
-				sendTelemetry(rt, QOS.AT_LEAST_ONCE, false, false);
+				sendTelemetry(rt);
 			}
 			catch (Exception e) {
-				log.error("exception sending message " + rt + " to Control Room via MQTT", e);
+				log.error("exception sending telemetry message " + rt + " to Control Room via MQTT", e);
 			}
 		}
 	}

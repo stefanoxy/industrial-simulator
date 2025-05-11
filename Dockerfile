@@ -1,7 +1,7 @@
 FROM openjdk:21-jdk-slim
 
 # OS update
-# RUN apt update && apt upgrade -y
+RUN apt clean && apt update && apt upgrade -y && apt autoremove
 
 # Setting working dir
 WORKDIR /app
