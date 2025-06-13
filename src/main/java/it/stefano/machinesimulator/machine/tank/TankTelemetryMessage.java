@@ -4,6 +4,10 @@ import it.stefano.machinesimulator.mqtt.AbstractTelemetryMessage;
 import lombok.Getter;
 import lombok.ToString;
 
+
+/**
+ * Messaggio di telemetria del Tank con valore di livello del liquido contenuto 
+ */
 @Getter
 @ToString(callSuper = true)
 public class TankTelemetryMessage extends AbstractTelemetryMessage

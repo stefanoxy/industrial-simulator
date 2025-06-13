@@ -1,5 +1,8 @@
 package it.stefano.machinesimulator.mqtt;
 
+/**
+ * Elenco dei Quality of Service previsti dal protocollo MQTT 
+ */
 public enum QOS
 {
 	AT_MOST_ONCE(0),

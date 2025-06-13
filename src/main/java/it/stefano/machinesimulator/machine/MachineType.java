@@ -5,6 +5,10 @@ import it.stefano.machinesimulator.machine.refrigerator.Refrigerator;
 import it.stefano.machinesimulator.machine.tank.Tank;
 import lombok.Getter;
 
+/**
+ * Elenco dei tipi di macchinari riconosciuti dalla Control Room.
+ * Ad ogni macchinario sono associati: la classe con cui viene istanziato e l'alias per identificare il certificato nel keystore
+ */
 @Getter
 public enum MachineType
 {

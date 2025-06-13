@@ -5,6 +5,9 @@ import it.stefano.machinesimulator.mqtt.AbstractCommandMessage;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Messaggio di comando per il Tank, inviato dalla Control Room, con valore di livello del liquido contenuto da impostare sul macchinario
+ */
 @Getter
 @ToString(callSuper = true)
 public class TankCommandMessage extends AbstractCommandMessage

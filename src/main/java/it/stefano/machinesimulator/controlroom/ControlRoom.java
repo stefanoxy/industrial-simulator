@@ -29,15 +29,24 @@ import it.stefano.machinesimulator.mqtt.QOS;
 import it.stefano.machinesimulator.mqtt.SecureEnvelope;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Simulatore di una Control Room che riceve messaggi di telemetria dai macchinari, invia comandi ai macchinari e segnala anomalie mandando messaggi
+ * di errore
+ *   
+ */
 @Slf4j
 public class ControlRoom implements IMqttMessageListener
 {
 	public static final String ERROR_TOPIC = "machine-errors";
 
+	// id univoco per MQTT
 	private final String		mqttClientId;
+	// keystore con certificati
 	private final KeyStore		keyStore;
+	// chiave privata
 	private final PrivateKey	privateKey;
 
+	// gestore della comunicazione con broker MQTT
 	private final MqttManager mqttManager;
 
 	public ControlRoom(String machineId, String mqttBroker, String mqttUsername, String mqttPassword, String keystoreFile, String keystorePassword, String keyAlias, String keyPassword) throws ControlRoomException {
@@ -46,11 +55,16 @@ public class ControlRoom implements IMqttMessageListener
 
 		try {
 			mqttManager = new MqttManager(mqttClientId, mqttBroker, mqttUsername, mqttPassword, keystoreFile, keystorePassword);
+			// topic con wildcard multilivello
 			String subscriptionTopic = MachineType.OUTPUT_ROOT_TOPIC + "/#";
 			log.info(mqttClientId + ": subscribing topics " + subscriptionTopic);
+			// subscribe a tutti i topic per ricevere i messaggi di telemetria di tutti i macchinari
 			mqttManager.subscribe(subscriptionTopic, this);
 
+			// caricamento certificati
 			this.keyStore = CryptoHelper.loadKeyStore(keystoreFile, keystorePassword);
+			// estrazione chiave privata da keystore
+			// Nell'implementazione di esercizio, il keystore della chiave privata dovrà essere unico per ogni macchinario e non condiviso
 			this.privateKey = (PrivateKey) keyStore.getKey(keyAlias, keyPassword.toCharArray());
 		}
 		catch (Exception e) {
@@ -58,21 +72,28 @@ public class ControlRoom implements IMqttMessageListener
 		}
 	}
 
+	/**
+	 * Gestisce i messaggi di telemetria ricevuti dai macchinari 
+	 */
 	@Override
 	public void messageArrived(String topic, MqttMessage message)
 	{
 		log.debug(mqttClientId + ": MQTT message - TOPIC: " + topic + " MSG: " + message);
 		try {
+			// estrae tipo di macchinario
 			MachineType mt = MachineType.getTypeByTopic(topic);
+			// verifica se è un macchinario conosciuto
 			if (mt == null) {
 				log.error("Unknown machine type for topic " + topic);
 				return;
 			}
-			// expecting an envelope
+			// preleva la SecureEnvelope
 			SecureEnvelope envelope = JsonHelper.jsonToObject(new String(message.getPayload(), StandardCharsets.UTF_8), SecureEnvelope.class);
-			// preleviamo dal keystore la public key del mittente con cui verificheremo l'integrità del messaggio
+			// preleviamo dal keystore la public key del mittente con cui verificare l'integrità del messaggio
 			Certificate cert = keyStore.getCertificate(mt.getCertificateAlias());
+			// chiede decodifica del messaggio con controllo dell'integrità
 			AbstractTelemetryMessage telemetry = (AbstractTelemetryMessage) envelope.decodeMessage(cert.getPublicKey());
+			// passa alla gestione del messaggio
 			handleTelemetry(mt, telemetry);
 		}
 		catch (Exception e) {
@@ -80,19 +101,25 @@ public class ControlRoom implements IMqttMessageListener
 		}
 	}
 
+	/**
+	 * Gestisce i messaggi di telemetria provenienti dai macchinari
+	 */
 	private void handleTelemetry(MachineType type, AbstractTelemetryMessage telemetry) throws ControlRoomException
 	{
 		log.info("Analysing telemetry: " + telemetry);
+		// in base al tipo implementa un comportamento diverso
 		switch (type) {
 			case CONTROL_ROOM:
-				// no telemetry from Control Room
-				// inserted only to avoid warning on switch/case not completed
+				// Non ci attendiamo messaggi di telemetria dalla Control Room
+				// Questo case è stato inserito solo per non avere il warning in compilazione relativo a un case non implementato
 				break;
 			case BOILER:
+				// estrae i valori
 				BoilerTelemetryMessage bt = (BoilerTelemetryMessage) telemetry;
 				double btemperature = bt.getTemperature();
 				double bpressure = bt.getPressure();
 
+				// se i valori sono fuori range, invia un comando al macchinario e un messaggio di errore a un topic dedicato
 				if (!isValidRange(type, btemperature, "temperature", Boiler.MIN_TEMPERATURE, Boiler.MAX_TEMPERATURE)) {
 					sendError(bt.getMachineId(), type, MachineError.BOILER_TEMPERATURE, btemperature);
 					btemperature = (Boiler.MIN_TEMPERATURE + Boiler.MAX_TEMPERATURE) / 2.0d;
@@ -100,6 +127,7 @@ public class ControlRoom implements IMqttMessageListener
 					BoilerCommandMessage bc = new BoilerCommandMessage(type, bt.getMachineId(), true, btemperature, bpressure);
 					sendCommand(bc, type, telemetry.getMachineId());
 				}
+				// se i valori sono fuori range, invia un comando al macchinario e un messaggio di errore a un topic dedicato
 				if (!isValidRange(type, bpressure, "pressure", Boiler.MIN_PRESSURE, Boiler.MAX_PRESSURE)) {
 
 					sendError(bt.getMachineId(), type, MachineError.BOILER_PRESSURE, bpressure);
@@ -110,8 +138,10 @@ public class ControlRoom implements IMqttMessageListener
 				}
 				break;
 			case REFRIGERATOR:
+				// estrae i valori
 				RefrigeratorTelemetryMessage rt = (RefrigeratorTelemetryMessage) telemetry;
 				double rtemperature = rt.getTemperature();
+				// se i valori sono fuori range, invia un comando al macchinario e un messaggio di errore a un topic dedicato
 				if (!isValidRange(type, rtemperature, "temperature", Refrigerator.MIN_TEMPERATURE, Refrigerator.MAX_TEMPERATURE)) {
 
 					sendError(rt.getMachineId(), type, MachineError.REFRIGERATOR_TEMPERATURE, rtemperature);
@@ -123,8 +153,10 @@ public class ControlRoom implements IMqttMessageListener
 				}
 				break;
 			case TANK:
+				// estrae i valori
 				TankTelemetryMessage tt = (TankTelemetryMessage) telemetry;
 				double tlevel = tt.getLevel();
+				// se i valori sono fuori range, invia un comando al macchinario e un messaggio di errore a un topic dedicato
 				if (!isValidRange(type, tlevel, "level", Tank.MIN_LEVEL, Tank.MAX_LEVEL)) {
 					sendError(tt.getMachineId(), type, MachineError.TANK_LEVEL, tlevel);
 					tlevel = (Tank.MIN_LEVEL + Tank.MAX_LEVEL) / 2.0d;
@@ -142,7 +174,7 @@ public class ControlRoom implements IMqttMessageListener
 		}
 	}
 
-	// semplificazione: solo valori double
+	// Controllo semplificato sui valori: gestiamo solo valori double
 	private boolean isValidRange(MachineType machineType, double value, String typeOfValue, double min, double max)
 	{
 		if ((value < min) || (value > max)) {
@@ -155,6 +187,9 @@ public class ControlRoom implements IMqttMessageListener
 		}
 	}
 
+	/**
+	 *  invia un messaggio di errore su un topic dedicato con QoS=2 per evitare duplicazioni e falsi allarmi
+	 */
 	private void sendError(String machineId, MachineType machineType, MachineError machineError, double value) throws ControlRoomException
 	{
 		ErrorMessage error = null;
@@ -171,6 +206,9 @@ public class ControlRoom implements IMqttMessageListener
 		}
 	}
 
+	/**
+	 * invia un comando al macchinario 
+	 */
 	private void sendCommand(AbstractCommandMessage message, MachineType machineType, String machineId) throws ControlRoomException
 	{
 		// il topic su cui scrive la ControlRoom è, dal punto di vista dei macchinari, il loro input topic

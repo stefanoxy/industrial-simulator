@@ -9,9 +9,11 @@ import java.security.cert.CertificateException;
 import it.stefano.machinesimulator.machine.AbstractMachine;
 import it.stefano.machinesimulator.machine.MachineException;
 import it.stefano.machinesimulator.mqtt.AbstractMiddlewareMessage;
-import it.stefano.machinesimulator.mqtt.QOS;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Implementazione del simulatore di un Tank 
+ */
 @Slf4j
 public class Tank extends AbstractMachine
 {
@@ -25,6 +27,10 @@ public class Tank extends AbstractMachine
 		super(clientId, mqttBroker, mqttUsername, mqttPassword, keystoreFile, keystorePassword, keyAlias, keyPassword);
 	}
 
+	/**
+	 * Il macchinario, a intervalli casuali, invia un messaggio di telemetria con valori fuori soglia nel DATAERROR_PERCENTAGE% dei casi
+	 * per attivare la reazione della Control Room
+	 */
 	@Override
 	public void run()
 	{
@@ -46,6 +52,10 @@ public class Tank extends AbstractMachine
 		}
 	}
 
+	/**
+	 * Gestisce i comandi arrivati dalla Control Room.
+	 * Nel concreto, viene solo inserita una riga nel log.
+	 */
 	@Override
 	public void handleCommand(String topic, AbstractMiddlewareMessage message)
 	{

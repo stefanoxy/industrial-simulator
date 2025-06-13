@@ -22,6 +22,9 @@ import it.stefano.machinesimulator.helper.JsonHelper;
 import it.stefano.machinesimulator.machine.MachineException;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Classe che rappresenta la connessione di un client (macchinario o Control Room) al broker MQTT. 
+ */
 @Slf4j
 public class MqttManager
 {
@@ -40,6 +43,9 @@ public class MqttManager
 		}
 	}
 
+	/**
+	 * Effettua il subscribe a un topic del broker
+	 */
 	public void subscribe(String topic,  IMqttMessageListener mqttListener) throws MqttManagerException
 	{
 		try {
@@ -50,6 +56,9 @@ public class MqttManager
 		}
 	}
 
+	/**
+	 * Invia un messaggio contenuto in una SecureEnvelope al broker MQTT
+	 */
 	public void sendMessage(SecureEnvelope envelope, String topic, QOS qos, boolean retained, boolean prettyJson) throws MachineException
 	{
 		try {
@@ -63,6 +72,9 @@ public class MqttManager
 		}
 	}
 
+	/**
+	 * @return SSLSocketFactory per istanziare connessioni TLS protette da certificato 
+	 */
 	private static SSLSocketFactory getSocketFactory(String keystoreFile, String keystorePassword) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, KeyManagementException, IOException
 	{
 		KeyStore keyStore = CryptoHelper.loadKeyStore(keystoreFile, keystorePassword);
@@ -76,6 +88,9 @@ public class MqttManager
 		return sc.getSocketFactory();
 	}
 
+	/**
+	 * @return Client MQTT con connessione sicura al broker
+	 */
 	private static MqttClient getMqtts(String clientId, String mqttBroker, String username, String password, String keystoreFile, String keystorePassword) throws MqttException, KeyManagementException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException
 	{
 		MqttClient mqttClient = new MqttClient(mqttBroker, clientId);
@@ -89,7 +104,6 @@ public class MqttManager
 
 		mqttClient.connect(connectOpt);
 
-		// TODO il brutto è che così non viene mai chiuso il client
 		return mqttClient;
 	}
 }

@@ -16,32 +16,60 @@ import it.stefano.machinesimulator.mqtt.QOS;
 import it.stefano.machinesimulator.mqtt.SecureEnvelope;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Generica classe rappresentante un macchinario.
+ * L'implementazione concreta del macchinario richiede l'implementazione dei metodi astratti
+ * 
+ * public abstract void handleCommand(String topic, AbstractMiddlewareMessage message);
+ * per gestire l'arrivo dei comandi
+ * 
+ * e
+ * 
+ * public abstract void run();
+ * 
+ * per implementare il comportamento specifico del macchinario.
+ * In questo prototipo, i macchinari a intervalli casuali inviano dati casuali alla Control Room.
+ * 
+ */
 @Slf4j
 public abstract class AbstractMachine extends Thread implements IMqttMessageListener
 {
+	// id del macchinario
 	private final String	machineId;
+	// id univoco per MQTT
 	private final String	mqttClientId;
+	// topic per invio messaggi di telemetria
 	private final String	outputTopic;
+	// topic per ricezione comandi da Control Room
 	private final String	subscriptionTopic;
 
+	// gestore della comunicazione con broker MQTT
 	private final MqttManager mqttManager;
 
+	// keystore con certificati
 	private final KeyStore		keyStore;
+	// chiave privata
 	private final PrivateKey	privateKey;
 
 	protected AbstractMachine(String machineId, String mqttBroker, String mqttUsername, String mqttPassword, String keystoreFile, String keystorePassword, String keyAlias, String keyPassword) throws MachineException {
 		log.info("Starting " + this.getClass().getSimpleName() + " with id=" + machineId);
 		this.machineId = machineId;
+		// creazione del nome del topic per invio messaggi di telemetria 
 		outputTopic = MachineType.getOutputTopicByMachine(this);
+		// creazione del nome del topic per ricezione messaggi di comando
 		subscriptionTopic = MachineType.getInputTopicByMachine(this);
 		mqttClientId = this.getClass().getSimpleName() + "-" + machineId;
 
 		try {
 			mqttManager = new MqttManager(mqttClientId, mqttBroker, mqttUsername, mqttPassword, keystoreFile, keystorePassword);
+			// subscribe al topic per ricevere comandi
 			mqttManager.subscribe(subscriptionTopic, this);
 			log.info(mqttClientId + ": subscribed topic " + subscriptionTopic);
 
+			// caricamento certificati
 			this.keyStore = CryptoHelper.loadKeyStore(keystoreFile, keystorePassword);
+			// estrazione chiave privata da keystore
+			// Nell'implementazione di esercizio, il keystore della chiave privata dovrà essere unico per ogni macchinario e non condiviso
 			this.privateKey = (PrivateKey) keyStore.getKey(keyAlias, keyPassword.toCharArray());
 		}
 		catch (Exception e) {

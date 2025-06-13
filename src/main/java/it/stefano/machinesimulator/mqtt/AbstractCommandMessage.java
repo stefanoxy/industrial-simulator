@@ -3,6 +3,9 @@ package it.stefano.machinesimulator.mqtt;
 import it.stefano.machinesimulator.machine.MachineType;
 import lombok.Getter;
 
+/**
+ * Generico messaggio di comando inviato dalla Control Room ai macchinari
+ */
 @Getter
 public class AbstractCommandMessage implements AbstractMiddlewareMessage
 {

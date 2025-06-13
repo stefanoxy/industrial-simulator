@@ -13,13 +13,10 @@ import it.stefano.machinesimulator.machine.MachineSimulator;
 import it.stefano.machinesimulator.machine.MachineType;
 import lombok.extern.slf4j.Slf4j;
 
-// TODO keystore contiene certificati e chiavi private... brutto!
-// TODO le pw sono in chiaro... brutto
-
 
 /**
- * Il simulatore è in grado di istanziare 3 tipi di macchine diverse (Refrigerator, Boiler, Tank) e la Control Room.
- * La Control Room monitora i messaggi provenienti dalle macchine e in caso di valori ritenuti fuori soglia, invia comandi
+ * Il simulatore è in grado di istanziare 3 tipi di macchinari diversi (Refrigerator, Boiler, Tank) e la Control Room.
+ * La Control Room monitora i messaggi provenienti dalle macchine e, in caso di valori ritenuti fuori soglia, invia comandi
  * alle macchine per riconfigurarle e segnala gli errori su un apposito topic.
  * 
  * Il simulatore prevede 9 parametri in input:
@@ -41,12 +38,14 @@ public class Main
 {
 	public static void main(String[] args) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException
 	{
+		// Controllo sui parametri ottenuti dalla riga di comando
 		if (args.length != 9) {
 			log.error("Provided only " + args.length + " parameters (" + Arrays.toString(args) + "), but 9 are required");
 			syntax();
 			return;
 		}
 
+		// estrazione del tipo di macchinario da istanziare
 		int type;
 		try {
 			type = Integer.parseInt(args[0]);
@@ -56,6 +55,8 @@ public class Main
 			syntax();
 			return;
 		}
+		
+		// estrazione degli altri parametri
 		String id = args[1];
 		String mqttBroker = args[2];
 		String mqttUsername = args[3];
@@ -65,7 +66,7 @@ public class Main
 		String keyAlias	= args[7];
 		String keyPassword = args[8];
 
-		
+		// identificazione del tipo di macchinario da istanziare
 		MachineType mt = null;
 		try {
 			mt = MachineType.getTypeById(type);
@@ -82,12 +83,21 @@ public class Main
 			return;
 		}
 
-		// Essendo un prototipo, nell'implementazione ci si è concessi che l'applicazione non termini mai (se non per interruzione dall'esterno).
-		// Ovviamente ciò è accettabile solo in quanto appunto si tratta di un prototipo.
-		// Nello specifico, l'instanziazione della connessione verso il broker MQTT nella classe ControlRoom lascia attivi dei thread che impediscono 
-		// al processo dell'applicazione di terminare, nonostante il main() si concluda.
-		// Nel caso del MachineSimulator, oltre ai thread che gestiscono la connessione verso il broker MQTT, viene anche espressamente lanciato un
-		// thread applicativo nel metodo startMachine() (che invoca start() sulla classe AbstractMachine, che estende Thread)
+		/*
+		 * Avvio del macchinario o della Control Room
+		 * 
+		 * Essendo un prototipo, nell'implementazione ci si è concessi che l'applicazione termini solo per interruzione dall'esterno.
+		 * Ovviamente ciò è accettabile solo in quanto appunto si tratta di un prototipo.
+		 * 
+		 * Nello specifico, nella classe ControlRoom il metodo che istanzia la connessione verso il broker MQTT lancia internamente dei thread 
+		 * che impediscono al processo dell'applicazione di terminare, nonostante il main() si concluda.
+		 * 
+		 * Nel caso del MachineSimulator, oltre ai thread che gestiscono la connessione verso il broker MQTT, viene anche espressamente lanciato un
+		 * thread applicativo nel metodo startMachine() (che invoca start() sulla classe AbstractMachine, che estende Thread)
+		 * 
+		 * In uno scenario di esercizio, sia i macchinari che la Control Room dovrebbero prevedere un metodo stop() con un'uscita ordinata
+		 * e pulita che chiuda le connessioni al broker MQTT e esca dal thread applicativo
+		 */
 		if (mt == MachineType.CONTROL_ROOM) {
 			try {
 				ControlRoom cr = new ControlRoom(id, mqttBroker, mqttUsername, mqttPassword, keystoreFile, keystorePassword, keyAlias, keyPassword);
@@ -102,6 +112,9 @@ public class Main
 		}
 	}
 
+	/**
+	 * Informazioni sui parametri attesi sulla riga di comando dell'applicazione
+	 */
 	private static final void syntax()
 	{
 		log.info("SYNTAX: MachineSimulator <type> <machine-id> <mqtt-broker> <mqtt-username> <mqtt-password> <keystore-file> <keystore-password> <key-alias> <key-password>");

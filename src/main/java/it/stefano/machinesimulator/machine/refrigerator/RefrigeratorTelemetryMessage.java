@@ -4,6 +4,9 @@ import it.stefano.machinesimulator.mqtt.AbstractTelemetryMessage;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Messaggio di telemetria del Refrigerator con valore di temperatura
+ */
 @Getter
 @ToString(callSuper = true)
 public class RefrigeratorTelemetryMessage extends AbstractTelemetryMessage

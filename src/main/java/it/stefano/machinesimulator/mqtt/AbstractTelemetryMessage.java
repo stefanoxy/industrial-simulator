@@ -4,6 +4,9 @@ import it.stefano.machinesimulator.machine.AbstractMachine;
 import it.stefano.machinesimulator.machine.MachineType;
 import lombok.Getter;
 
+/**
+ * Generico messaggio di telemetria inviato dai macchinari alla Control Room
+ */
 @Getter
 public class AbstractTelemetryMessage implements AbstractMiddlewareMessage
 {

@@ -4,6 +4,10 @@ import it.stefano.machinesimulator.mqtt.AbstractTelemetryMessage;
 import lombok.Getter;
 import lombok.ToString;
 
+
+/**
+ * Messaggio di telemetria del Boiler con due valori, temperatura e pressione
+ */
 @Getter
 @ToString(callSuper = true)
 public class BoilerTelemetryMessage extends AbstractTelemetryMessage

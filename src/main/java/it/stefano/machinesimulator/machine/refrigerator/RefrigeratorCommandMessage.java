@@ -5,6 +5,9 @@ import it.stefano.machinesimulator.mqtt.AbstractCommandMessage;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * Messaggio di comando per il Refrigerator, inviato dalla Control Room, con valori di temperatura e stato (acceso/spento) da impostare sul macchinario
+ */
 @Getter
 @ToString(callSuper = true)
 public class RefrigeratorCommandMessage extends AbstractCommandMessage

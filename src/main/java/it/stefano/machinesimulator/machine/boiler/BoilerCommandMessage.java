@@ -5,7 +5,9 @@ import it.stefano.machinesimulator.mqtt.AbstractCommandMessage;
 import lombok.Getter;
 import lombok.ToString;
 
-// TODO commentare uso Lombok
+/**
+ * Messaggio di comando per il Boiler, inviato dalla Control Room, con valori di temperatura, pressione e stato (acceso/spento) da impostare sul macchinario
+ */
 @Getter
 @ToString(callSuper = true)
 public class BoilerCommandMessage extends AbstractCommandMessage

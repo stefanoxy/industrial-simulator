@@ -18,6 +18,9 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+/**
+ * Metodi di utilità per gestione del KeyStore, encryption/decryption, generazione di hash, trasformazione in Base64 
+ */
 public class CryptoHelper
 {
 	private CryptoHelper() {

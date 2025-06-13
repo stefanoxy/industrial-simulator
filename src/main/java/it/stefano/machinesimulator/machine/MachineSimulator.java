@@ -4,7 +4,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import lombok.extern.slf4j.Slf4j;
-// TODO qui usate reflection
+
+
+/**
+ * Simulatore di un generico macchinario di tipo AbstractMachine.
+ * La classe del macchinario da istanziare, definita da machineType, viene trovata e inizializzata tramite reflection per mantenere genericità
+ *  
+ */
 @Slf4j
 public class MachineSimulator
 {
