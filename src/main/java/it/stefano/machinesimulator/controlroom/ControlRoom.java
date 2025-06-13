@@ -167,8 +167,9 @@ public class ControlRoom implements IMqttMessageListener
 				}
 				break;
 			default:
-				// TODO commentare questo default
-				// useful log to discover unmanaged cases of new machine types
+				// Implementiamo anche il case default così inseriamo una riga error nel log qualori ci fosse un caso nuovo non implementato
+				// questo aiuta la manutenzione evolutiva in quanto rivela nuovi type non gestiti dall'applicazione, invece
+				// di proseguire in modo silente
 				log.error("Unimplemented telemetry case '" + type + "'. Please check MachineType");
 				break;
 		}
