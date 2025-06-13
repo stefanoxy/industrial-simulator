@@ -1,4 +1,4 @@
 # industrial-simulator
-Industrial scenario simulator with middleware implementation for OT-IT integration.
+Simulatore di un ambiente industriale con middleware dove macchinari e Stazione di Controllo scambiano messaggi asincroni con garanzia di integrità e riservatezza.
 
-For a quick boot, use compose/compose.yml to start a simulation with Control Room, Boiler, Refrigerator and Tank exchanging messages through MQTT topics.
+Per un rapido avvio, usare compose/compose.yml per istanziare il simulatore con una Control Room, un Boiler, un Refregerator e un Tank che scambiano messaggi attraverso topic su un broker MQTT.
