@@ -9,14 +9,14 @@ public enum QOS
 	AT_LEAST_ONCE(1),
 	EXACTLY_ONCE(2);
 
-	private int qos;
+	private int value;
 
-	QOS(int qos) {
-		this.qos = qos;
+	QOS(int value) {
+		this.value = value;
 	}
 
-	public int getQOS()
+	public int getValue()
 	{
-		return qos;
+		return value;
 	}
 }

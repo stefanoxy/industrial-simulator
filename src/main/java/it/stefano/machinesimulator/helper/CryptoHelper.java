@@ -1,7 +1,6 @@
 package it.stefano.machinesimulator.helper;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -26,7 +25,7 @@ public class CryptoHelper
 	private CryptoHelper() {
 	}
 
-	public static KeyStore loadKeyStore(String keystoreFile, String keystorePassword) throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException
+	public static KeyStore loadKeyStore(String keystoreFile, String keystorePassword) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException
 	{
 		KeyStore keyStore;
 
@@ -58,7 +57,7 @@ public class CryptoHelper
 		return digest.digest(input);
 	}
 
-	public static String toBase64(byte[] input) throws NoSuchAlgorithmException
+	public static String toBase64(byte[] input)
 	{
 		return Base64.getEncoder().encodeToString(input);
 	}

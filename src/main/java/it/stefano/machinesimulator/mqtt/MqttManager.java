@@ -65,7 +65,7 @@ public class MqttManager
 			log.info(mqttClientId + ": sending message " + envelope + " to topic " + topic);
 
 			String s = JsonHelper.objectToJson(envelope, prettyJson);
-			mqttClient.publish(topic, s.getBytes(StandardCharsets.UTF_8), qos.getQOS(), retained);
+			mqttClient.publish(topic, s.getBytes(StandardCharsets.UTF_8), qos.getValue(), retained);
 		}
 		catch (Exception e) {
 			throw new MachineException(mqttClientId + ": exception sending message " + envelope + " to topic " + topic, e);
