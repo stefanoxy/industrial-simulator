@@ -4,7 +4,10 @@
 Per creare l'immagine del simulatore a partire dal Dockerfile
 >docker build -t industrial-simulator:latest .
 
-Per istanziare solo il broker mqtt sul pc locale, usando il compose/compose.yml
+Per istanziare l'ambiente completo di simulazione, entrare nella directory compose e usare il compose.yml
+>docker compose up
+
+Per istanziare solo il broker MQTT, entrare nella directory compose e usare il compose.yml
 >docker compose up mosquitto
 
 ## Mosquitto
