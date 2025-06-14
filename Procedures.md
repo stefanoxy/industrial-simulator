@@ -14,8 +14,7 @@ Per istanziare solo il broker MQTT, entrare nella directory compose e usare il c
 Il plugin per Eclipse è disponibile alla URL
 >https://marketplace.eclipse.org/content/plantuml-plugin/help
 
-Una volta installato il plugin, è sufficiente fare clic sul file .puml di interesse e aprire la View PlantUML.
-Per aprire la View, selezionare in Eclipse il menu Window -> Show View -> Other... -> PlantUML -> PlantUML
+Una volta installato il plugin, è sufficiente fare clic sul file .puml di interesse e aprire la View PlantUML in Eclipse, usando il menu Window -> Show View -> Other... -> PlantUML -> PlantUML
 
 ## Mosquitto
 ### Preparazione del file delle password
