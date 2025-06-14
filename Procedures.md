@@ -10,6 +10,13 @@ Per istanziare l'ambiente completo di simulazione, entrare nella directory compo
 Per istanziare solo il broker MQTT, entrare nella directory compose e usare il compose.yml
 >docker compose up mosquitto
 
+## PlantUML
+Il plugin per Eclipse è disponibile alla URL
+>https://marketplace.eclipse.org/content/plantuml-plugin/help
+
+Una volta installato il plugin, è sufficiente fare clic sul file .puml di interesse e aprire la View PlantUML.
+Per aprire la View, selezionare in Eclipse il menu Window -> Show View -> Other... -> PlantUML -> PlantUML
+
 ## Mosquitto
 ### Preparazione del file delle password
 Creare un file chiamato passwd.clear contenente gli utenti nel formato
