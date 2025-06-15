@@ -1,5 +1,22 @@
 # Procedure operative
 
+## Build e esecuzione del prototipo
+Installare Docker, Java 21 e Gradle 8.5.
+Scaricare il progetto completo, aprire un command prompt su Windows o una shell su Linux.
+Entrare nella cartella del progetto e eseguire il build del prototipo
+
+>gradle clean build
+
+Creare l'immagine Docker del prototipo
+
+>dockerbuild.bat (su Windows)
+oppure
+>./dockerbuild.sh (su Linux)
+
+Entrare nella cartella "compose" e avviare il Docker Compose
+
+>docker compose up
+
 ## Docker
 Per creare l'immagine del simulatore a partire dal Dockerfile
 >docker build -t industrial-simulator:latest .
