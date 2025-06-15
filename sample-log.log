@@ -1,5 +1,6 @@
 
-P:\middleware-scenario_WS\industrial-simulator\compose>docker compose up
+>docker compose up
+
 [+] Running 1/1
  ✔ mosquitto Pulled                                                                                                1.3s
 [+] Running 6/6
@@ -1417,4 +1418,3 @@ Gracefully stopping... (press Ctrl+C again to force)
  ✔ Container simulator-boiler        Stopped                                                                      11.1s
  ✔ Container simulator-refrigerator  Stopped                                                                      10.8s
  ✔ Container mosquitto               Stopped                                                                       0.7s
-
