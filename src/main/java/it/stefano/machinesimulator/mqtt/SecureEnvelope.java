@@ -6,13 +6,11 @@ import java.security.Key;
 import it.stefano.machinesimulator.helper.CryptoHelper;
 import it.stefano.machinesimulator.helper.JsonHelper;
 import lombok.Getter;
-import lombok.ToString;
 
 /**
  * Busta sicura per i messaggi con meccanismo trasparente per l'utilizzatore di controllo dell'integrità dl contenuto
  */
 @Getter
-@ToString
 public class SecureEnvelope
 {
 	private final String										messageJson;
@@ -72,5 +70,13 @@ public class SecureEnvelope
 		{
 			throw new SecureEnvelopeException("Exception decoding message");
 		}
+	}
+
+	// Evitiamo l'implementazione di default e di Lombok e preferiamo una
+	// implementazione personalizzata del toString per mostrare il signedHash in Base64
+	@Override
+	public String toString()
+	{
+		return "SecureEnvelope [messageJson=" + messageJson + ", messageClass=" + messageClass + ", signedHash=" + CryptoHelper.toBase64(signedHash) + "]";
 	}
 }
