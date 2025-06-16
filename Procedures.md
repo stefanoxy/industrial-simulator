@@ -15,7 +15,7 @@ oppure
 
 >./dockerbuild.sh (su Linux)
 
-Entrare nella cartella "compose" e avviare l'ambiente completo con Docker Compose
+Entrare nella cartella "compose", configurare la variabile di ambiente APP_BASE_PATH nel file .env e, infine, avviare l'ambiente completo con Docker Compose
 
 >docker compose up
 
