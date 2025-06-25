@@ -2,8 +2,8 @@
 
 ## Build e esecuzione del prototipo
 Installare Docker, Java 21 e Gradle 8.5.
-Scaricare il progetto completo, aprire un command prompt su Windows o una shell su Linux.
-Entrare nella cartella del progetto e fare il build del prototipo
+Scaricare il progetto completo, aprire un _command prompt_ su Windows o una _shell_ su Linux.
+Entrare nella cartella del progetto e fare il _build_ del prototipo
 
 >gradle clean build
 
