@@ -23,17 +23,17 @@ Entrare nella cartella "compose", configurare la variabile di ambiente APP_BASE_
 Per creare l'immagine del simulatore a partire dal Dockerfile
 >docker build -t industrial-simulator:latest .
 
-Per istanziare l'ambiente completo di simulazione, entrare nella directory compose e usare il compose.yml
+Per istanziare l'ambiente completo di simulazione, entrare nella directory "compose" e usare il "compose.yml"
 >docker compose up
 
-Per istanziare solo il broker MQTT, entrare nella directory compose e usare il compose.yml
+Per istanziare solo il broker MQTT
 >docker compose up mosquitto
 
 ## PlantUML
-Il plugin per Eclipse è disponibile alla URL
+Il _plugin_ per Eclipse è disponibile alla URL
 >https://marketplace.eclipse.org/content/plantuml-plugin/help
 
-Una volta installato il plugin, è sufficiente fare clic sul file .puml di interesse e aprire la View PlantUML in Eclipse, usando il menu Window -> Show View -> Other... -> PlantUML -> PlantUML
+Una volta installato il _plugin_, è sufficiente fare clic sul file .puml di interesse e aprire la View PlantUML in Eclipse, usando il menu Window -> Show View -> Other... -> PlantUML -> PlantUML
 
 ## Mosquitto
 ### Preparazione del file delle password
