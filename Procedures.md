@@ -58,8 +58,8 @@ Aprire il file di configurazione con
 
 e aggiungere le seguenti righe
 
-allow_anonymous false   
-password_file /etc/mosquitto/passwd   
+>allow_anonymous false   
+>password_file /etc/mosquitto/passwd   
 
 ## Certificati
 Istanziare una macchina con Ubuntu mediante Docker
@@ -182,7 +182,7 @@ Organizational Unit Name (eg, section) []:Tank T01
 Common Name (e.g. server FQDN or YOUR name) []:tankt01   
 Email Address []:   
 
-###Importazione nel Keystore
+###Import nel Keystore
 Per importare chiavi e certificati in keystore specifici
 >openssl pkcs12 -export -inkey ca-private.pem -in ca-certificate.pem -out ca.p12 -name ca   
 export password: middle
